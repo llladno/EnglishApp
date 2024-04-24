@@ -13,9 +13,16 @@ defineProps<{
 
 <style scoped>
   button {
-    background: #c73fa7;
+    background: var(--main-color);
+    font-weight: 700;
+    font-size: 20px;
     border: none;
     padding: 10px 15px;
     border-radius: 10px;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+  button:hover {
+    background: var(--acent-color);
   }
 </style>

@@ -12,11 +12,25 @@ input {
   color: black
 }
 
+a {
+  color: var(--acent-color);
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+a:hover{
+  color: var(--link-hover)
+}
+
 
 :root{
   --link-color: #1543f6;
   --link-hover: #5475fa;
   --main-color: #986FCA;
-  --text-acent-color: #775aa4;
+  --acent-color: #775aa4;
   --background-color: #111827;
+  --test-color: #444444;
+  --text-color: #f8fafc;
+  --text-secondary-color: #72768c;
 }
