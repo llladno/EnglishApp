@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
 defineProps<{
   title?: string
@@ -14,12 +13,19 @@ defineProps<{
 
 <style scoped>
   input {
-    border: 3px solid #c73fa7;
+    border: 2px solid var(--main-color);
+    background: var(--test-color);
+    color: var(--text-color);
     padding: 10px 10px;
     border-radius: 10px;
     outline: none;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  input::placeholder {
+    color: var(--text-secondary-color);
   }
   input:focus {
-    border: 3px solid #592659;
+    border: 2px solid var(--acent-color);
   }
 </style>

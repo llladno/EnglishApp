@@ -2,11 +2,7 @@
 
 import EAInput from '@/components/common/EAInput/EAInput.vue'
 import EAButton from '@/components/common/EAButton/EAButton.vue'
-
-
-function changes(event: string, title: string){
-  console.log(title)
-}
+import axios from 'axios'
 
 function submit(event: any){
   event.preventDefault()
@@ -16,7 +12,11 @@ function submit(event: any){
       console.log('error')
     } else {
       // TODO добавить обработку
-      console.log('ok!')
+      axios.post('http://localhost:3005/registration', {
+        email: values[0].value,
+        login: values[1].value,
+        password: values[2].value,
+      })
     }
   } else {
     console.log('Заполните все поля')

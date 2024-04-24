@@ -1,12 +1,19 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+export const useMovieStore = defineStore("movieStore", {
+  state: () => ({
+    error: {status: false,
+      message: ''},
+    activeTab: 1,
+  }),
+  actions: {
+    setError(status: boolean, message: string) {
+      this.error = {status, message};
+      console.log(this.error)
+      setTimeout(()=>{
+        this.error = {status: false,
+          message: ''};
+      },3000)
+    },
   }
-
-  return { count, doubleCount, increment }
-})
+});
