@@ -5,10 +5,12 @@ defineProps<{
   likes?: number,
 }>()
 
+const data = defineModel()
+
 </script>
 
 <template>
-  <input :placeholder="title">
+  <input :placeholder="title" v-model="data">
 </template>
 
 <style scoped>

@@ -4,19 +4,27 @@ import EAInput from '@/components/common/EAInput/EAInput.vue'
 import EAButton from '@/components/common/EAButton/EAButton.vue'
 import axios from 'axios'
 import { useMovieStore } from '@/stores/counter'
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import router from '@/router'
+
+let data = ref({
+  login: '',
+  password: ''
+})
+
 
 
 async function submit(event: any){
   const movieStore = useMovieStore()
   event.preventDefault()
   const values = event.target
-  if ((values[0].value && values[1].value)) {
-    console.log('ok')
-    const response = await axios.post('http://localhost:3005/login', {
-      login: values[0].value,
-      password: values[1].value
+  console.log(data.value)
+  if ((data.value.login && data.value.password)) {
+    useUserStore().loginUser({login: data.value.login, password: data.value.password}).then((res)=>{ router.push('/account') }).catch((e)=>{
+      if(e) movieStore.setError(true, 'Неверный логин или пароль')
+      console.log('e')
     })
-    response.data ? null : movieStore.setError(true, 'Неверный логин или пароль')
   } else {
     movieStore.setError(true, 'Заполните все поля')
     console.log('Заполните все поля')
@@ -27,9 +35,9 @@ async function submit(event: any){
 <template>
   <div>
     <form @submit="submit">
-      <EAInput :likes="1" title="Login"></EAInput>
-      <EAInput :likes="1" title="Password"></EAInput>
-      <EAButton title="Submit" type="submit"></EAButton>
+      <EAInput :likes="1" title="Login" v-model="data.login"></EAInput>
+      <EAInput :likes="1" title="Password" v-model="data.password"></EAInput>
+      <EAButton title="Submit" type="submit">Login</EAButton>
       <RouterLink to="/registration">Registration</RouterLink>
     </form>
   </div>
