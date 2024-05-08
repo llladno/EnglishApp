@@ -3,20 +3,32 @@
 import EAInput from '@/components/common/EAInput/EAInput.vue'
 import EAButton from '@/components/common/EAButton/EAButton.vue'
 import axios from 'axios'
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
-function submit(event: any){
+let data = ref({
+  email: '',
+  login: '',
+  password: '',
+  repeatPassword: ''
+})
+
+
+function submit(event: any) {
   event.preventDefault()
   const values = event.target
-  if ((values[0].value || values[1].value ||values[2].value || values[3].value)) {
-    if((values[2].value !== values[3].value) || values[0].value.replace(/^\S+@\S+\.\S+$/) !== 'undefined') {
+  const send = data.value
+
+  if ((send.email || send.password || send.login || send.repeatPassword)) {
+    if ((send.password !== send.repeatPassword) || send.email.replace(/^\S+@\S+\.\S+$/) !== 'undefined') {
       console.log('error')
-    } else {
-      // TODO добавить обработку
-      axios.post('http://localhost:3005/registration', {
-        email: values[0].value,
-        login: values[1].value,
-        password: values[2].value,
+    } else{
+      useUserStore().createUser({
+        email: send.email,
+        login: send.login,
+        password: send.password
       })
+      // TODO добавить обработку ошибок
     }
   } else {
     console.log('Заполните все поля')
@@ -29,17 +41,19 @@ function submit(event: any){
     Registration
   </h1>
   <form @submit="submit">
-    <EAInput :likes="1" title="Email"></EAInput>
-    <EAInput :likes="1" title="Login"></EAInput>
-    <EAInput :likes="1" title="Password"></EAInput>
-    <EAInput :likes="1" title="Repeat password"></EAInput>
-    <EAButton title="Submit" type="submit"></EAButton>
+    <EAInput :likes="1" title="Email" v-model="data.email"></EAInput>
+    <EAInput :likes="1" title="Login" v-model="data.login"></EAInput>
+    <EAInput :likes="1" title="Password" v-model="data.password"></EAInput>
+    <EAInput :likes="1" title="Repeat password" v-model="data.repeatPassword"></EAInput>
+    <EAButton type="submit">
+      Submit
+    </EAButton>
   </form>
 
 </template>
 
 <style scoped>
-form{
+form {
   display: flex;
   flex-direction: column;
   gap: 15px
