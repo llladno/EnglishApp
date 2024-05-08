@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EABar from '@/components/layout/EABar/EABar.vue'
 import { ref } from 'vue'
+import Lessons from '@/components/pages/Lessons.vue'
 
 let tab = ref(0)
 
@@ -31,7 +32,7 @@ console.log(tab.value)
     <div>
       <h2>Личный кабинет {{ tab }}</h2>
       <div v-if="tab === 0">
-        <h1>Lessons</h1>
+        <Lessons />
       </div>
       <div v-else-if="tab === 1">
         <h1>Rewards</h1>
