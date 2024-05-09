@@ -17,7 +17,7 @@ onMounted(async () => {
 <template>
 
   <div v-if="lessons.length !== 0" v-for="(lesson, index) in lessons" :key="index">
-    <h3 @click="category = lesson">{{index}}</h3>
+    <h3 @click="category.length === 0 ? category = lesson : category = []">{{index}}</h3>
     {{console.log(lesson)}}
   </div>
   <div v-else>
@@ -25,7 +25,7 @@ onMounted(async () => {
   </div>
   <div v-if="category.length !== 0">
     <div v-for="(lesson, index) in category" :key="index">
-      <h4 @click="navigation.push(`/lesson/${lesson._id}`)">{{lesson.theme}} </h4>
+      <h4 @click="navigation.push(`/lesson/${lesson._id}`)">{{lesson.settings.theme}} </h4>
     </div>
   </div>
 

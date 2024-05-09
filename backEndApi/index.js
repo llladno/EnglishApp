@@ -16,7 +16,7 @@ app.use(cors())
 
 import { MongoClient, ServerApiVersion } from 'mongodb'
 // const uri = "mongodb+srv://man30968:56YxZNv2nOn2Jgd0@englishapp.mbylg4j.mongodb.net/?retryWrites=true&w=majority&appName=EnglishApp";
-const uri = 'mongodb://localhost:27017/'
+const uri = 'mongodb://127.0.0.1:27017/'
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 // const uri = 'mongodb://adminEnglishApp:qwerty@109.68.215.157:27017/?authMechanism=DEFAULT'
 //'mongodb://adminEnglishApp:qwerty@109.68.215.157:27017/?authMechanism=DEFAULT'
@@ -133,10 +133,11 @@ app.post('/words', async (req, res) => {
 
 app.get('/lessons', async (req, res) => {
   const value = await baseQuery({}, 'find', 'Lessons')
+  console.log(value)
   const groupBy = (items, key) => items.reduce(
     (result, item) => ({
       ...result,
-      [item[key]]: [
+      [item.settings[key]]: [
         ...(result[item[key]] || []),
         item,
       ],

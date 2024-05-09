@@ -10,14 +10,22 @@ const lesson = ref({})
 onMounted(()=>{
   useLessonsStore().getLesson(navigation.params.id).then((res)=>{
     lesson.value = res.data
+    console.log(lesson.value)
   })
   })
 </script>
 
 <template>
-  <h1>{{lesson.category}}</h1>
-  <h3>{{lesson.theme}}</h3>
-  <EALessonCard v-if="lesson.category" :lesson="lesson"></EALessonCard>
+  <div v-if="lesson.settings">
+    <h1>{{lesson.settings.category}}</h1>
+    <h3>{{lesson.settings.theme}}</h3>
+      <EALessonCard :lesson="lesson"></EALessonCard>
+
+  </div>
+  <div v-else>
+    Loading
+  </div>
+
 </template>
 
 <style scoped>

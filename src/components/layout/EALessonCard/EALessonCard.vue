@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { type Events, ref } from 'vue'
 import EAButton from '@/components/common/EAButton/EAButton.vue'
 import EAModal from '@/components/layout/EAModal/EAModal.vue'
 import { useLessonsStore } from '@/stores/lessonsStore'
-import checkimage from '@/assets/icons/check.svg'
+import IconCoin from '@/components/icons/IconCoin.vue'
+import type { Lesson, Word } from '@/types/lessonTypes'
 
-const props = defineProps({
-  lesson: { type: Object }
-})
+const props = defineProps<{
+  lesson: Lesson
+}>()
 
-function shuffleArray(array) {
+console.log(props)
+
+function shuffleArray(array: Word[]) {
   console.log('_')
   for (var i = array.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1))
@@ -21,8 +24,8 @@ function shuffleArray(array) {
 }
 
 const answers = ref([])
-const cardValues = ref([])
-const randomText = ref('')
+const cardValues = ref<Word[]>([])
+const randomText = ref<Word>({ word: '', translate: '' })
 const photoUrl = ref('')
 const isLoading = ref(true)
 let words = JSON.parse(JSON.stringify(props.lesson.words))
@@ -30,7 +33,7 @@ let walidWords = words
 let random = Math.round(Math.random() * (walidWords.length - 1))
 let randomPlace = Math.round(Math.random() * 3)
 let randomValue = walidWords[random]
-words = words.filter((w) => w.word !== randomValue.word)
+words = words.filter((w: Word) => w.word !== randomValue.word)
 shuffleArray(words)
 words[randomPlace] = randomValue
 cardValues.value = words.slice(0, 4)
@@ -38,7 +41,7 @@ randomText.value = randomValue
 
 async function getPhoto(wordValue: string) {
   await useLessonsStore().getPhoto(wordValue).then((value) => {
-    photoUrl.value = value.data.hits[0].webformatURL
+    photoUrl.value = value?.data.hits[0].webformatURL
   })
 }
 
@@ -46,18 +49,19 @@ getPhoto(randomValue.word)
 
 //https://pixabay.com/api/?key=43739713-5853d22ee946b4f02485c3114&q=yellow+flowers&image_type=photo&pretty=true
 
-async function okey(event, word) {
-  event.target.style.backgroundColor = 'green'
-  event.target.disabled = true
+async function okey(event: Event, word: Word) {
+  const ev = event.target as HTMLButtonElement
+  ev.style.backgroundColor = 'green'
+  ev.disabled = true
   setTimeout(async () => {
     cardValues.value = []
-    walidWords = walidWords.filter((w) => w.word !== word.word)
+    walidWords = walidWords.filter((w: Word) => w.word !== word.word)
     answers.value.push(word)
     words = await JSON.parse(JSON.stringify(props.lesson.words))
     let random = Math.round(Math.random() * (walidWords.length - 1))
     let randomPlace = Math.round(Math.random() * 3)
     let randomValue = walidWords[random]
-    words = words.filter((w) => w.word !== randomValue.word)
+    words = words.filter((w: Word) => w.word !== randomValue.word)
     shuffleArray(words)
     words[randomPlace] = randomValue
     cardValues.value = words.slice(0, 4)
@@ -68,8 +72,9 @@ async function okey(event, word) {
 }
 
 
-function notOkey(event) {
-  event.target.style.backgroundColor = 'red'
+function notOkey(event: Event) {
+  const ev = event.target as HTMLElement
+  ev.style.backgroundColor = 'red'
 }
 </script>
 
@@ -87,8 +92,7 @@ function notOkey(event) {
       <EAButton v-else @click="notOkey">{{ word.word }}</EAButton>
     </div>
   </div>
-<!--  <EAModal v-if="lesson.words.length == answers.length">-->
-  <EAModal>
+  <EAModal v-if="lesson.words.length == answers.length">
     <div class="center">
       <div class="test">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-0.5 -0.5 24 24" id="Check-Thick--Streamline-Plump.svg" class="check"
@@ -102,9 +106,14 @@ function notOkey(event) {
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="150" height="150" class="circle">
           <circle cx="50" cy="50" r="45" />
         </svg>
-        <h2 class="congratulations">Молодец!</h2>
+        <div class="congratulations">
+          <h2 >Молодец!</h2>
+          <div class="coinsCenter">
+            <h3>+ 10</h3>
+              <IconCoin :width="30"></IconCoin>
+          </div>
+        </div>
       </div>
-
     </div>
   </EAModal>
 </template>
@@ -209,11 +218,30 @@ circle {
 }
 
 .congratulations{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   font-size: 30px;
   color: black;
-  top: -50px;
+  top: -65px;
   animation: 1.4s ease-in-out forwards congratulations-animation;
+}
+
+.congratulations h2{
+  font-size: 30px;
+  color: black;
+}
+
+.congratulations h3{
+  color: black;
+  font-size: 20px;
+}
+
+.coinsCenter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @keyframes congratulations-animation {
