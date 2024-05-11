@@ -1,13 +1,12 @@
 <script setup lang="ts">
 defineProps<{
-  title: string,
-  type: string
+  type?: string
 }>()
 </script>
 
 <template>
   <button :type="type">
-    {{title}}
+    <slot></slot>
   </button>
 </template>
 
