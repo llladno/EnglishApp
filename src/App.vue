@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import EAHeader from "@/components/layout/EAHeader/EAHeader.vue";
+import { RouterView } from 'vue-router'
+import { useMovieStore } from '@/stores/counter'
+import { ref } from 'vue'
+import EAError from '@/components/layout/EAError/EAError.vue'
+
+const error = ref(useMovieStore())
 </script>
 
 <template>
-<EAHeader />
   <RouterView />
+  <EAError v-if="error.error.status" :error="error.error.message"></EAError>
 </template>
 
 <style>

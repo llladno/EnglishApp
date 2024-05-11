@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import EARegistrationFrom from '@/components/layout/EARegistrationForm/EARegistrationFrom.vue'
+
+import EALogin from '@/components/layout/EALogin/EALogin.vue'
 import EAHeader from '@/components/layout/EAHeader/EAHeader.vue'
+
+
 </script>
 
 <template>
   <EAHeader></EAHeader>
-  <div class="registration">
+  <div class="login">
     <div>
-      <EARegistrationFrom></EARegistrationFrom>
+      <EALogin></EALogin>
     </div>
   </div>
+
 </template>
 
 <style scoped>
-.registration {
+.login {
   margin-top: 150px;
   display: flex;
   justify-content: center;
