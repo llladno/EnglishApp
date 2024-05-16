@@ -1,6 +1,8 @@
 import express from 'express'
 import mongodb, { ObjectId } from 'mongodb'
 import bodyParser from 'body-parser'
+import csv from 'fast-csv'
+import fs from 'fs'
 
 const app = express()
 import cors from 'cors'
@@ -60,6 +62,19 @@ async function baseQuery(query, method, collection) {
          words: {$each: query.push.words}
         }})
       return result
+    } else if(method === 'increment'){
+      const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$inc: query.replace})
+      return result
+    } else if(method === 'pushComplete'){
+      const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$addToSet: {
+          complite: query.push
+        }})
+      return result
+    } else if(method === 'addToSetWords'){
+      const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$addToSet: {
+          words: { $each: query.push }
+        }})
+      return result
     }
     else {
       const cursor = await client.db('EnglishApp').collection(collection).find(query)
@@ -70,7 +85,7 @@ async function baseQuery(query, method, collection) {
     console.log(err)
     return 'error'
   } finally {
-    await client.close()
+    // await client.close()
   }
 }
 
@@ -137,7 +152,7 @@ app.get('/lessons', async (req, res) => {
   const groupBy = (items, key) => items.reduce(
     (result, item) => ({
       ...result,
-      [item.settings[key]]: [
+      [item[key]]: [
         ...(result[item[key]] || []),
         item,
       ],
@@ -156,4 +171,52 @@ app.get('/lessons/:id', async (req, res) => {
   res.send(value[0])
 })
 
+app.get('/csv', async (req, res) => {
+  let arr = []
+  await fs.createReadStream('./assets/words.csv').pipe(csv.parse({headers: true})).
+  on('data', async (row) => {
+    arr.push(row)
+      const value = await baseQuery({ theme: row.theme ,category: row.category }, 'find', 'Lessons').then(async (res)=> {
+        if (res.length === 0) {
+          await baseQuery({
+            theme: row.theme,
+            level: row.level,
+            category: row.category,
+            words: [{ word: row.word, translate: row.translate }]
+          }, 'insert', 'Lessons').catch((e) => console.log(e))
+        } else {
+          let data = {
+            theme: row.theme,
+            level: row.level,
+            category: row.category,
+            words: [{ word: row.word, translate: row.translate }]
+          } //TODO Сделать
+          await baseQuery({
+            find: { theme: row.theme, category: row.category },
+            push: { words: data.words }
+          }, 'push', 'Lessons').catch((e) => console.log(e))
+        }
+      })
+  }).on('end', ()=>{
+    console.log('CSV file successfully processed')
+    res.send(arr)
+  })
+})
 
+
+app.get('/user/:uuid', async (req, res) => {
+  const uuid = new ObjectId(req.params.uuid)
+  const value = await baseQuery({_id: uuid}, 'find', 'Users')
+  res.send(value[0])
+})
+
+app.patch('/user/:uuid/complete_lesson', async (req, res) => {
+//TODO Сделать запрос на сервер для добавления правильных ответов и денег
+  const {money} = req.body
+  const uuid = new ObjectId(req.params.uuid)
+  console.log(req.body)
+  // await baseQuery({find: { _id: uuid }, replace: {money: money}}, 'increment', 'Users')
+  await baseQuery({find: {_id: uuid}, push: {lessonid: req.body._id, theme: req.body.theme, category: req.body.category}}, 'pushComplete', 'Users').then(async ()=>{
+    await baseQuery({find: {_id: uuid}, push:req.body.words}, 'addToSetWords', 'Users')
+  })
+})

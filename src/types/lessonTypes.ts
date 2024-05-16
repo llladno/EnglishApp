@@ -9,7 +9,6 @@ export interface Settings {
   level: string;
 }
 
-export interface Lesson {
-  setting: Settings;
+export interface Lesson extends Settings{
   words: Word[];
 }

@@ -21,10 +21,7 @@ async function submit(event: any){
   const values = event.target
   console.log(data.value)
   if ((data.value.login && data.value.password)) {
-    useUserStore().loginUser({login: data.value.login, password: data.value.password}).then((res)=>{ router.push('/account') }).catch((e)=>{
-      if(e) movieStore.setError(true, 'Неверный логин или пароль')
-      console.log('e')
-    })
+    useUserStore().loginUser({login: data.value.login, password: data.value.password}).then((res)=>{ router.push('/account') })
   } else {
     movieStore.setError(true, 'Заполните все поля')
     console.log('Заполните все поля')
