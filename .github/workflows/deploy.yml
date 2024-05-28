@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - feature/EA-3
+      - main
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install frontend dependencies
         run: npm install
@@ -32,19 +32,13 @@ jobs:
         run: npm run build-only
         working-directory: .
 
-      # Set up Python environment
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
       - name: Install backend dependencies
-        run: pip install -r requirements.txt
+        run: npm install
         working-directory: backEndApi
 
       - name: Run backend server
         run: |
-          nohup python manage.py runserver 0.0.0.0:8000 &
+          nohup node index.js &
         working-directory: backEndApi
 
       - name: Deploy frontend
