@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - feature/EA-3
+      - main
 
 jobs:
   build:
