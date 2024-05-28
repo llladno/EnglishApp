@@ -3,31 +3,36 @@ name: Deploy
 on:
   push:
     branches:
-      - feature/EA-3
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up Node.js environment for frontend
-      - name: Setup Node.js for frontend
+      # Set up Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16'
 
       - name: Install frontend dependencies
         run: npm install
-        working-directory: .  # Путь к фронтенд директории, . означает корневую директорию
+        working-directory: .
+
+      # Remove the lint and type-check step
+      # - name: Lint and type-check
+      #   run: npm run lint && npm run type-check
+      #   working-directory: .
 
       - name: Build frontend
         run: npm run build
         working-directory: .
 
-      # Set up Python environment for backend
+      # Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -35,7 +40,7 @@ jobs:
 
       - name: Install backend dependencies
         run: pip install -r requirements.txt
-        working-directory: backEndApi  # Путь к бекенд директории
+        working-directory: backEndApi
 
       - name: Run backend server
         run: |
@@ -44,6 +49,7 @@ jobs:
 
       - name: Deploy frontend
         run: |
+          npm install -g serve
           nohup serve -s dist &
         working-directory: .
 
