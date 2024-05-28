@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - feature/EA-3
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
       # Remove the lint and type-check step
       # - name: Lint and type-check
       #   run: npm run lint && npm run type-check
-      #   working-directory: .
+      #   working-directory: .s
 
       - name: Build frontend
         run: npm run build-only
