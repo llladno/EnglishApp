@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "checkJs": false,
     "allowJs": true,
+    "isolatedModules": false, // добавьте этот параметр
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
     "module": "ESNext",
