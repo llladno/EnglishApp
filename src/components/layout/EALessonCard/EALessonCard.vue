@@ -69,8 +69,6 @@ async function okey(event: Event, word: Word) {
     cardValues.value = words.slice(0, 4)
     randomText.value = randomValue
     getPhoto(randomValue.word)
-    console.log(answers.value.length+1)
-    console.log(props.lesson.words.length)
 
   }, 500)
 
@@ -80,6 +78,7 @@ async function okey(event: Event, word: Word) {
 function notOkey(event: Event) {
   const ev = event.target as HTMLElement
   ev.style.backgroundColor = 'red'
+  useUserStore().removeHeart( )
 }
 </script>
 

@@ -9,7 +9,6 @@ export const useUserStore = defineStore('userStore', {
     movieStore: useMovieStore()
   }),
   actions: {
-
     async createUser(data: registrationUserI) {
       try {
         const response = await UserService.getRegistration(data)
@@ -43,6 +42,14 @@ export const useUserStore = defineStore('userStore', {
     async completeLesson(data: Lesson, money:number){
       try{
         return await UserService.completeLesson(data, money, localStorage.getItem('id') || '')
+      } catch (e){
+        this.movieStore.setError(true, 'Пользователь не найден')
+      }
+      throw new Error()
+    },
+    async removeHeart(){
+      try{
+        return await UserService.removeHeart(1, localStorage.getItem('id') || '')
       } catch (e){
         this.movieStore.setError(true, 'Пользователь не найден')
       }

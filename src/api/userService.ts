@@ -20,6 +20,8 @@ export default class UserService {
 
   static async completeLesson(data: Lesson, money:number, uuid:string) {
     return $api.patch(`${this.userInfo}/${uuid}/complete_lesson`, {...data, money: money})
-
+  }
+  static async removeHeart(data, uuid:string) {
+    return $api.patch(`${this.userInfo}/${uuid}/remove_heart`, { number: data })
   }
 }
