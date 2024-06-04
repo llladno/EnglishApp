@@ -1,5 +1,5 @@
 import express from 'express'
-import mongodb, { ObjectId } from 'mongodb'
+import mongodb from 'mongodb'
 import bodyParser from 'body-parser'
 import csv from 'fast-csv'
 import fs from 'fs'
@@ -51,17 +51,13 @@ async function baseQuery(query, method, collection) {
     // const database = client.db('EnglishApp')
     // const data = database.collection('Users')
     if (method === 'insert') {
-      console.log('this')
       const result = await client.db('EnglishApp').collection(collection).insertOne(query)
       return result
     } else if(method === 'replace') {
       const result = await client.db('EnglishApp').collection(collection).replaceOne(query.find, query.replace)
       return result
     } else if(method === 'push'){
-      console.log(query.push)
-      const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$push: {
-         words: {$each: query.push.words}
-        }})
+      const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$push: query.push})
       return result
     } else if(method === 'increment'){
       const result = await client.db('EnglishApp').collection(collection).updateOne(query.find, {$inc: query.replace})
@@ -131,8 +127,7 @@ app.post('/words', async (req, res) => {
   console.log(req.body)
   const value = await baseQuery({ theme: req.body.settings.theme ,category: req.body.settings.category }, 'find', 'Lessons').then(async (res)=>{
     if (res.length === 0) {
-      let body = req.body
-      await baseQuery({theme: body.settings.theme, level: body.settings.level, category: body.settings.category, words: body.words}, 'insert', 'Lessons').catch((e) => console.log(e))
+      await baseQuery(req.body[0], 'insert', 'Lessons').catch((e) => console.log(e))
     } else {
       let data = {
         ...req.body.settings,

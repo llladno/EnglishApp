@@ -4,7 +4,6 @@ import RegistrationView from '@/views/RegistrationView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AccountView from '@/views/AccountView.vue'
 import AddWordsView from '@/views/AddWordsView.vue'
-import * as path from 'node:path'
 import LessonView from '@/views/LessonView.vue'
 
 const router = createRouter({

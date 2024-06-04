@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment for frontend
+      - name: Setup Node.js for frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: .  # Путь к фронтенд директории, . означает корневую директорию
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: .
+
+      # Set up Python environment for backend
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+        working-directory: backEndApi  # Путь к бекенд директории
+
+      - name: Run backend server
+        run: |
+          nohup python manage.py runserver 0.0.0.0:8000 &
+        working-directory: backEndApi
+
+      - name: Deploy frontend
+        run: |
+          nohup serve -s dist &
+        working-directory: .
+
+      - name: Keep action alive
+        run: sleep infinity
