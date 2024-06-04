@@ -9,7 +9,9 @@ const error = ref(useMovieStore())
 
 <template>
   <RouterView />
-  <EAError v-if="error.error.status" :error="error.error.message"></EAError>
+  <EAError v-if="error.error.status" :error="error.error.message">
+
+  </EAError>
 </template>
 
 <style>

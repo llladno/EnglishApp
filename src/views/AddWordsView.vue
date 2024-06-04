@@ -49,6 +49,7 @@ function sendNewWords(){
     <select @change="settings.category = $event.target.value">
       <option disabled selected>Category</option>
       <option>Base English</option>
+      <option>Food</option>
     </select>
     <EAInput placeholder="Theme" @change="settings.theme = $event.target.value"></EAInput>
     <EAInput placeholder="word" @change="word.word = $event.target.value"></EAInput>

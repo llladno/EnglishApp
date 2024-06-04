@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  type: string
+  type?: string
 }>()
 </script>
 
@@ -12,16 +12,9 @@ defineProps<{
 
 <style scoped>
   button {
-    background: var(--main-color);
-    font-weight: 700;
-    font-size: 20px;
+    background: #c73fa7;
     border: none;
     padding: 10px 15px;
     border-radius: 10px;
-    transition: 0.2s;
-    cursor: pointer;
-  }
-  button:hover {
-    background: var(--acent-color);
   }
 </style>
